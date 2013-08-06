@@ -1,0 +1,1 @@
+function $zen(){return $(zen.apply(this,arguments))}

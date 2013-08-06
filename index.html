@@ -1,0 +1,117 @@
+<!doctype html>
+<html class="no-js" lang="en">
+	<head>
+		<meta charset="utf-8">
+
+		<title>Zen</title>
+
+		<meta name="author" content="Ron Valstar" />
+		<meta name="keywords" content="jquery, sort, tinysort, sortby, tablesort, listsort, sort nodes, nested sort" />
+		<meta name="description" content="TinySort is a small jQuery plugin that will sort any nodetype by it's text-, attribute- or data value, or by that of one of it's children." />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<link rel="shortcut icon" href="style/favicon.ico">
+
+		<link rel="stylesheet" type="text/css" href="style/screen.css" />
+		<!--<link rel="stylesheet" type="text/css" href="http://localhost/libs/js/opensource/web/style/opensource.css" />-->
+
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.js"></script>
+		<script>window.jQuery||document.write("<script src='libs/jquery-2.0.3.js'>\x3C/script>")</script>
+		<script src="libs/jquery.opensource.min.js"></script>
+		<!--<script src="http://localhost/libs/js/opensource/web/scripts/jquery.opensource.js"></script>-->
+
+		<script src="dist/zen.min.js"></script>
+		<script src="src/jquery.zen.js"></script>
+
+		<script>
+			var aAsc = [],$XTable ,$XTableTB ,$XTableTR ,$XTableTD;
+			OPENSOURCE.init({
+				 id: 'Zen'
+				,version: '0.0.1'
+				,copyright: 'Copyright (c) 2008-2013 Ron Valstar'
+			},function(){
+				function handleTestClick(){
+					handleResetClick.apply(this);
+					var mP = this.parentNode
+						,sJs = this.attributes['data-js'].value;
+					mP.appendChild(eval(sJs));
+				}
+				function handleResetClick(){
+					var aTest = this.parentNode.querySelectorAll('.test');
+					for (var i=0,l=aTest.length;i<l;i++) {
+						var mElm = aTest[0];
+						mElm.parentNode.removeChild(mElm);
+					}
+				}
+				$('pre.example').each(function(i,pre){
+					var mP = zen('p>(a.tst[data-js=datajs]{test}+{ or }+a.reset{reset})',{
+							datajs: pre.innerText
+						})
+					;
+					pre.parentNode.insertBefore(mP,pre.nextSibling);
+					mP.querySelector('.tst').addEventListener('click',handleTestClick,true);
+					mP.querySelector('.reset').addEventListener('click',handleResetClick,true);
+				});
+			});
+		</script>
+	</head>
+	<body>
+		<header class="main">
+			<div><h1><span></span></h1><nav></nav></div>
+		</header>
+		<section id="intro">
+			<div>
+				<div>
+					<p><a href="http://emmet.io/" target="_blank">Emmet</a> (formerly known as Zen) made me a bit spoiled. I've written a lot of Javascript (and HTML) and wondered it would be a lot easier if I could just use a query selector in reverse. As opposed to innerHTML and document.createElement, just as your Emmet parser does in your IDE.</p>
+
+					<p>A while back I wrote a few lines for this purpose (about twenty). This script uses a subset of <a href="https://github.com/emmetio/emmet" target="_blank">Emmet</a> and adds a 'wrapper' function to return an HTMLElement.</p>
+
+					<p>Excessive use in a production environment is not really recommended. A 43kB minified is a bit much and createElement is still the proper way. But it's a nice-to-have for XXXX</p>
+
+					<p><small>ps: I named the function zen to prevent collisions with emmet, and of course: zen sounds way better.</small></p>
+				</div>
+				<aside>
+					<h3>download</h3>
+					<a class="button download choosehref" href="dist/jquery.tinysort.min.js">
+						<label for="tts1"><input type="radio" id="tts1" name="tts" value="dist/zen.js" /><span class="filesize"></span> source</label><br/>
+						<label for="tts2"><input type="radio" id="tts2" name="tts" value="dist/zen.min.js" checked /><span class="filesize"></span> minified</label><br/>
+						<label for="tts3"><input type="radio" id="tts3" name="tts" value="dist/zen.jgz" /><span class="filesize"></span> gzipped</label><br/>
+						<span class="iconic download"></span> zen
+					</a>
+
+					<a class="button download choosehref" href="dist/jquery.tinysort.charorder.min.js">
+						<!--<label for="pco1"><input type="radio" id="pco1" name="pco" value="dist/jquery.tinysort.charorder.js" /><span class="filesize"></span> source</label><br/>-->
+						<label for="pco2"><input type="radio" id="pco2" name="pco" value="dist/jquery.zen.min.js" checked /><span class="filesize"></span> minified</label><br/>
+						<label for="pco3"><input type="radio" id="pco3" name="pco" value="dist/jquery.zen.jgz" /><span class="filesize"></span> gzipped</label><br/>
+						<span class="iconic download"></span> jquery.zen
+					</a>
+					<a href="https://github.com/Sjeiti/zen/zipball/master" class="button download small"><span class="iconic download"></span> <span class="filesize"></span> full zip<br/><small>including examples</small></a>
+
+					<a href="https://github.com/Sjeiti/zen.git" class="repo" data-type="git" rel="external" target="_blank"></a>
+				</aside>
+				<br class="clear" />
+			</div>
+		</section>
+		<div id="page">
+			<section>
+				<h2>examples</h2>
+
+				<h3>Zen</h3>
+				<p>Check the <a href="http://docs.emmet.io/abbreviations/syntax/" target="_blank">Emmet abbreviations</a> on how to use the function.</p>
+				<pre class="example">zen('ul.test>li{list element $}*3')</pre>
+
+				<h3>Complex or dynamic content</h3>
+				<p>To enable complex or dynamic content you can pass an object as a second argument. This replaces the object key with the object value on the Emmet result string. So use with care.</p>
+				<pre class="example">zen('div.test.myClassname{myContent}',{myClassname:'foo-bar',myContent:'This is content'})</pre>
+
+				<h3>Dynamic content in an array</h3>
+				<p>When the a value in the content object is an array instead of a string it will search for the object key appended with the array position (plus one, since Emmet counts from 1, not 0).</p>
+				<pre class="example">zen('ul.test>li{$: data$}*3',{data:['foo','bar','baz']})</pre>
+
+			</section>
+		</div>
+		<footer>
+			<div>© 2008-2013 <a href="http://www.sjeiti.com/">Ron Valstar</a></div>
+		</footer>
+	</body>
+</html>
