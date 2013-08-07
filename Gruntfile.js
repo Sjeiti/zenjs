@@ -1,10 +1,20 @@
 module.exports = function (grunt) {
 	'use strict';
 
-	var sPackage = 'package.json',
+	var fs = require('fs'),
+		sPackage = 'package.json',
 		oPackage = grunt.file.readJSON(sPackage),
-		sEmmetPath = 'C:\\xampp\\htdocs\\libs\\js\\emmet\\javascript\\'
+		sEmmetPath = 'C:\\xampp\\htdocs\\libs\\js\\emmet\\javascript\\',
+
+		sZen = fs.readFileSync('src/zen.js').toString(),
+		sBanner = sZen.match(/\/\*\*([\s\S]*?)\*\//g)[0],
+		sVersion = sBanner.match(/(\s\*\s@version\s)(\d+\.\d+\.\d+)/).pop()
 	;
+	if (oPackage.version!==sVersion) {
+		grunt.log.writeln('Updated package version from',oPackage.version,'to',sVersion);
+		oPackage.version = sVersion;
+		fs.writeFile(sPackage,JSON.stringify(oPackage,null,'\t'));
+	}
 
 	grunt.initConfig({
 		pkg: oPackage,
@@ -21,8 +31,9 @@ module.exports = function (grunt) {
 			options: {
 				separator: ';'
 			},
-			emmet: {
+			zen: {
 				src: [
+					'wrap/before.js.tpl',
 					sEmmetPath+'underscore.js',
 					sEmmetPath+'core.js',
 					sEmmetPath+'parsers\\abbreviationParser.js',
@@ -38,14 +49,9 @@ module.exports = function (grunt) {
 					sEmmetPath+'elements.js',
 					sEmmetPath+'filters.js',
 					sEmmetPath+'filters\\format.js',
-					sEmmetPath+'filters\\html.js'
-				],
-				dest: 'dist/emmet.js'
-			},
-			zen: {
-				src: [
-					'dist/emmet.js',
-					'src/zen.js'
+					sEmmetPath+'filters\\html.js',
+					'src/zen.js',
+					'wrap/after.js.tpl'
 				],
 				dest: 'dist/zen.js'
 			}
@@ -53,7 +59,7 @@ module.exports = function (grunt) {
 
 		uglify: {
 			zen: {
-//				options: { banner: bannerTinysort+'\n' },
+				options: { banner: sBanner+'\n' },
 				src: 'dist/zen.js',
 				dest: 'dist/zen.min.js'
 			},

@@ -1,1 +1,1 @@
-function $zen(){return $(zen.apply(this,arguments))}
+!function(a,b){"use strict";a.fn.extend({zen:function(){return this.html(b.apply(this,arguments)),this}}),a.zen=function(){return a(b.apply(this,arguments))}}(jQuery,zen);var $zen=jQuery.zen;

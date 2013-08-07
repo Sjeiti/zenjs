@@ -21,32 +21,35 @@
 		<!--<script src="http://localhost/libs/js/opensource/web/scripts/jquery.opensource.js"></script>-->
 
 		<script src="dist/zen.min.js"></script>
-		<script src="src/jquery.zen.js"></script>
+		<script src="dist/jquery.zen.min.js"></script>
 
 		<script>
-			var aAsc = [],$XTable ,$XTableTB ,$XTableTR ,$XTableTD;
 			OPENSOURCE.init({
 				 id: 'Zen'
-				,version: '0.0.1'
+				,version: $.ajax({url:'dist/zen.min.js',async:false}).responseText.match(/(\s\*\s@version\s)(\d+\.\d+\.\d+)/).pop()
 				,copyright: 'Copyright (c) 2008-2013 Ron Valstar'
 			},function(){
 				function handleTestClick(){
 					handleResetClick.apply(this);
 					var mP = this.parentNode
-						,sJs = this.attributes['data-js'].value;
-					mP.appendChild(eval(sJs));
+						,sJs = decodeURIComponent(this.attributes['data-js'].value)
+						,aNodeList = eval(sJs)
+					;
+					for (var i=0,l=aNodeList.length;i<l;i++) {
+						mP.appendChild(aNodeList[0]);
+					}
 				}
 				function handleResetClick(){
 					var aTest = this.parentNode.querySelectorAll('.test');
 					for (var i=0,l=aTest.length;i<l;i++) {
-						var mElm = aTest[0];
+						var mElm = aTest[i];
 						mElm.parentNode.removeChild(mElm);
 					}
 				}
 				$('pre.example').each(function(i,pre){
 					var mP = zen('p>(a.tst[data-js=datajs]{test}+{ or }+a.reset{reset})',{
-							datajs: pre.innerText
-						})
+							datajs: encodeURIComponent(pre.innerText)
+						})[0]
 					;
 					pre.parentNode.insertBefore(mP,pre.nextSibling);
 					mP.querySelector('.tst').addEventListener('click',handleTestClick,true);
@@ -62,13 +65,13 @@
 		<section id="intro">
 			<div>
 				<div>
-					<p><a href="http://emmet.io/" target="_blank">Emmet</a> (formerly known as Zen) made me a bit spoiled. I've written a lot of Javascript (and HTML) and wondered it would be a lot easier if I could just use a query selector in reverse. As opposed to innerHTML and document.createElement, just as your Emmet parser does in your IDE.</p>
+					<p><a href="http://emmet.io/" target="_blank">Emmet</a> (formerly known as Zen) spoiled me. Writing a lot of Javascript (and HTML) and I've often thought it would be a lot easier to just use a query selector in reverse. As opposed to innerHTML and document.createElement, just as your Emmet parser does in your favorite IDE.</p>
 
-					<p>A while back I wrote a few lines for this purpose (about twenty). This script uses a subset of <a href="https://github.com/emmetio/emmet" target="_blank">Emmet</a> and adds a 'wrapper' function to return an HTMLElement.</p>
+					<p><small>A while back I wrote a few lines for this purpose. This script uses a subset of <a href="https://github.com/emmetio/emmet" target="_blank">Emmet</a> and adds a 'wrapper' function to return an HTMLElement.</small></p>
 
-					<p>Excessive use in a production environment is not really recommended. A 43kB minified is a bit much and createElement is still the proper way. But it's a nice-to-have for XXXX</p>
+					<p><small>Excessive use in a production environment is not really recommended. 44kB minified is a bit much and document.createElement is still the proper way. But it's a nice-to-have for prototyping, testing and small projects that don't require speed.</small></p>
 
-					<p><small>ps: I named the function zen to prevent collisions with emmet, and of course: zen sounds way better.</small></p>
+					<p><small>ps: I named it 'zen' to prevent collisions with emmet, and of course: zen sounds way better.</small></p>
 				</div>
 				<aside>
 					<h3>download</h3>
@@ -94,19 +97,50 @@
 		</section>
 		<div id="page">
 			<section>
-				<h2>examples</h2>
+				<h2>Usage</h2>
+
+				<p>The function works as follows <code>zen(abbreviation[,content]);</code>.</p>
+
+				<p>The <em>abbreviation</em> parameter is similar to a query selector. Emmet really does all the magic so <a href="http://docs.emmet.io/abbreviations/syntax/" target="_blank">check the Emmet website</a> for documentation on the abbreviation syntax.<br/> So this: <code>zen('h3{zen}');</code> will return an array with one HTMLElement: <code>&lt;h3&gt;zen&lt;/h3&gt;</code></p>
+
+				<p>The optional <em>content</em> parameter is an object which keys replace the values on the resulting emmet string. This is usefull for complex or dynamic content.<br/> So this: <code>zen('h3.emmet{zen}',{emmet:'bert',zen:'ernie'});</code> will return an array with the following HTMLElement: <code>&lt;h3 class="bert"&gt;ernie&lt;/h3&gt;</code></p>
+
+				<p>When the object value is an array the result string will be searched for the object key plus the array index (incremented by one).<br/>As such: <code>zen('p*3{foo$}',{foo:['bar','baz','qux']});</code> will return the following Array: <code>[&lt;p&gt;bar&lt;/p&gt;,&lt;p&gt;baz&lt;/p&gt;,&lt;p&gt;qux&lt;/p&gt;]</code></p>
+
+				<p>When your abbreviations always return a single element the return of an Array might be a bit of a nuisance. Setting <code>zen.firstChild = true;</code> will cause the function to return an HTMLElement instead of an Array if the result is a single element.</p>
+
+				<p>In addition there's a tiny jQuery plugin. It has <strong>zen.js</strong> as a dependency and works in a similar way but returns a jQuery object.</p>
+
+
+				<h2>Examples</h2>
 
 				<h3>Zen</h3>
-				<p>Check the <a href="http://docs.emmet.io/abbreviations/syntax/" target="_blank">Emmet abbreviations</a> on how to use the function.</p>
-				<pre class="example">zen('ul.test>li{list element $}*3')</pre>
+				<p>Here's a basic example.</p>
+				<pre class="example">zen('ul.test>li{list element $}*3');</pre>
+
+				<h3>Multiple children</h3>
+				<p>This will return an Array with a length of two</p>
+				<pre class="example">zen('div.test{a}+div.test>p>span{b}+em{c}');</pre>
 
 				<h3>Complex or dynamic content</h3>
 				<p>To enable complex or dynamic content you can pass an object as a second argument. This replaces the object key with the object value on the Emmet result string. So use with care.</p>
-				<pre class="example">zen('div.test.myClassname{myContent}',{myClassname:'foo-bar',myContent:'This is content'})</pre>
+				<pre class="example">zen('div.test.myClassname{myContent}',{myClassname:'foo-bar',myContent:'This is content'});</pre>
 
 				<h3>Dynamic content in an array</h3>
 				<p>When the a value in the content object is an array instead of a string it will search for the object key appended with the array position (plus one, since Emmet counts from 1, not 0).</p>
-				<pre class="example">zen('ul.test>li{$: data$}*3',{data:['foo','bar','baz']})</pre>
+				<pre class="example">zen('ul.test>li{$: data$}*3',{data:['foo','bar','baz']});</pre>
+
+				<h3>jQuery</h3>
+				<p></p>
+				<pre class="example">$.zen('ul.test>li{list element $}*3');</pre>
+
+				<h3>jQuery.html equivalent</h3>
+				<p></p>
+				<pre class="example">$('&lt;ul class="test"&gt;&lt;/ul&gt;').zen('li{list element $}*3');</pre>
+
+				<h3>Alias</h3>
+				<p>To make your code a bit more aesthetic there's also an alias for $.zen: $zen.</p>
+				<pre class="example">$zen('ul.test>li{list element $}*3');</pre>
 
 			</section>
 		</div>

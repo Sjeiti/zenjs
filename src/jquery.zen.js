@@ -1,7 +1,15 @@
-/**
-* uses emmetio (aka zen) with jquery
-* dependencies: (emmet/javascript/) :: underscore core parsers\abbreviationParser utils handlerList stringStream resources profile abbreviationUtils htmlMatcher tabStops preferences elements filters filters\format filters\html
- */
-function $zen(){
-	return $(zen.apply(this,arguments));
-}
+/* global zen:true */
+/* exported $zen */
+(function($,zen) {
+	'use strict';
+	$.fn.extend({
+		zen: function() {
+			this.html(zen.apply(this,arguments));
+			return this;
+		}
+	});
+	$.zen = function() {
+		return $(zen.apply(this,arguments));
+	};
+})(jQuery,zen);
+var $zen = jQuery.zen;
