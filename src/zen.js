@@ -46,6 +46,6 @@ var zen = (function(emmet){
 		}
 	;
 	zen.firstChild = false;
-	//zen.exposeEmmet = function(){window.emmet=emmet;};
+	zen.exposeEmmet = function(){return emmet;};
 	return zen;
 })(emmet);
