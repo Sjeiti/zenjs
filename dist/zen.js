@@ -6,7 +6,7 @@ var zen = (function(){
  * @param {string} abbreviation The Emmet abbreviation to expand.
  * @param {Object} [content] An optional content object to replace strings from the result.
  * @returns {Array} The Emmet result in an Array.
- * @version 0.1.2
+ * @version 0.1.3
  * @author Ron Valstar <ron@ronvalstar.nl>
  * @licence MIT: http://www.opensource.org/licenses/mit-license.php
  * @requires Emmet (currently using revision c973f3d)
