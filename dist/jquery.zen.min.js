@@ -1,1 +1,1 @@
-!function(a,b){"use strict";a.fn.extend({zen:function(){return this.html(b.apply(this,arguments)),this}}),a.zen=function(){return a(b.apply(this,arguments))}}(jQuery,zen);var $zen=jQuery.zen;
+!function(t,n){"use strict";t.fn.extend({zen:function(){return this.html(n.apply(this,arguments)),this}}),t.zen=function(){return t(n.apply(this,arguments))}}(jQuery,zen);var $zen=jQuery.zen;

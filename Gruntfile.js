@@ -55,7 +55,7 @@ module.exports = function (grunt) {
 			zen: {
 				src: [
 					'wrap/before.js.tpl',
-					'temp/emmet.usage.min.js',
+					'temp/emmet.min.js',
 					'src/zen.js',
 					'wrap/after.js.tpl'
 				],
@@ -83,10 +83,6 @@ module.exports = function (grunt) {
 				src: 'src/jquery.zen.js',
 				dest: 'dist/jquery.zen.jgz',
 				compress: true
-			},
-			emmetusage: {
-				src: 'temp/emmet.usage.js',
-				dest: 'temp/emmet.usage.min.js'
 			}
 		},
 
@@ -94,7 +90,7 @@ module.exports = function (grunt) {
 			options: { foo: 'bar' },
 			emmet: {
 				src: './temp/emmet.js',
-				dest: './temp/emmet.usage.js',
+				dest: './temp/emmet.min.js',
 				prepare: function(){
 
 				},
@@ -197,6 +193,24 @@ module.exports = function (grunt) {
 			aLines[iLineNr-1] = sLine.replace(sInsert,bUsed?'':sMark);
 		}
 		sNewFile = aLines.join('\n');
+		//
+		// let uglify compress it
+		var uglify = require('uglify-js');
+		var toplevel = uglify.parse(sNewFile);
+		toplevel.figure_out_scope();
+		var compressor = uglify.Compressor({warnings:false});//options
+		var compressed_ast = toplevel.transform(compressor);
+		compressed_ast.figure_out_scope();
+		compressed_ast.compute_char_frequency();
+		compressed_ast.mangle_names();
+		sNewFile = compressed_ast.print_to_string({});//options
+		//
+		// replace all function(a,b,c){return!1} occurrences with a dummy
+		var rFnNotOne = /function\([^)]*\){return!1}/g
+			,sDummyName = 'z'+Math.ceil(1E8*Math.random()).toString(36);
+		sNewFile = 'function '+sDummyName+'(){return!1};'+sNewFile.replace(rFnNotOne,sDummyName);
+		//
+		// save result
 		fs.writeFileSync(oData.dest,sNewFile);
 		//
 		// result log
@@ -222,13 +236,11 @@ module.exports = function (grunt) {
 	grunt.registerTask('usage',[
 		'concat:emmet'
 		,'testUsage'
-		,'uglify:emmetusage'
 	]);
 
 	grunt.registerTask('prod',[
 		'concat:emmet'
 		,'testUsage'
-		,'uglify:emmetusage'
 		,'jshint'
 		,'concat:zen'
 		,'uglify:zen'
