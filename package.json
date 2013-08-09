@@ -1,6 +1,6 @@
 {
 	"name": "Zen",
-	"version": "0.1.4",
+	"version": "0.1.5",
 	"devDependencies": {
 		"grunt": "~0.4.1",
 		"grunt-contrib": "~0.7.0",
