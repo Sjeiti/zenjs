@@ -94,7 +94,6 @@ module.exports = function (grunt) {
 				append: '\n;GLOBAL.emmet=emmet;',
 				prepare: function(){},
 				test: function(){
-					console.log('start test'); // log
 					[
 						'ul>li*3>a*2',
 						'div>ul>li',
@@ -117,7 +116,6 @@ module.exports = function (grunt) {
 					].forEach(function(abbr){
 						emmet.expandAbbreviation(abbr);
 					});
-					console.log('end test'); // log
 				}
 			}
 		},
