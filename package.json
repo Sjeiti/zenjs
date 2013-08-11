@@ -6,9 +6,10 @@
 		"grunt-contrib": "~0.7.0",
 		"grunt-contrib-jshint": "~0.6.2",
 		"grunt-contrib-uglify": "~0.2.2",
-		"grunt-contrib-concat": "~0.3.0"
+		"grunt-contrib-concat": "~0.3.0",
+		"grunt-unused-functions": "~0.1.5"
 	},
-	"description": "TinySort",
+	"description": "zenzenzenzen",
 	"main": "Gruntfile.js",
 	"dependencies": {
 		"grunt": "~0.4.1",

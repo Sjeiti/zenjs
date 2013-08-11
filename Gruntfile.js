@@ -86,6 +86,42 @@ module.exports = function (grunt) {
 			}
 		},
 
+		unused_functions: {
+			options: {},
+			emmet: {
+				src: 'temp/emmet.js',
+				dest: 'temp/emmet.min.js',
+				append: '\n;GLOBAL.emmet=emmet;',
+				prepare: function(){},
+				test: function(){
+					console.log('start test'); // log
+					[
+						'ul>li*3>a*2',
+						'div>ul>li',
+						'div+p+bq',
+						'div+div>p>span+em',
+						'div+div>p>span+em^bq',
+						'div+div>p>span+em^^^bq',
+						'ul>li*5',
+						'div>(header>ul>li*2>a)+footer>p',
+						'(div>dl>(dt+dd)*3)+footer>p',
+						'div#header+div.page+div#footer.class1.class2.class3',
+						'td[title="Hello world!" colspan=3]',
+						'ul>li.item$*5',
+						'ul>li.item$$$*5',
+						'ul>li.item$@-*5',
+						'ul>li.item$@3*5',
+						'ul>li.item$@-3*5',
+						'a{Click me}',
+						'p>{Click }+a{here}+{ to continue}'
+					].forEach(function(abbr){
+						emmet.expandAbbreviation(abbr);
+					});
+					console.log('end test'); // log
+				}
+			}
+		},
+
 		testUsage: {
 			options: {},
 			emmet: {
@@ -258,12 +294,18 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-contrib-jshint');
 	grunt.loadNpmTasks('grunt-contrib-concat');
+	grunt.loadNpmTasks('grunt-unused-functions');
 
 	// tasks (jshint)
 	grunt.registerTask('default',[
 		,'concat:zen'
 		,'uglify:zen'
 		,'uglify:jqueryzen'
+	]);
+
+	grunt.registerTask('unused',[
+		'concat:emmet'
+		,'unused_functions'
 	]);
 
 	grunt.registerTask('usage',[
