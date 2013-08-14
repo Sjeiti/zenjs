@@ -5,10 +5,10 @@
  * @param {string} abbreviation The Emmet abbreviation to expand.
  * @param {Object} [content] An optional content object to replace strings from the result.
  * @returns {Array} The Emmet result in an Array.
- * @version 0.1.5
+ * @version 0.1.6
  * @author Ron Valstar <ron@ronvalstar.nl>
  * @licence MIT: http://www.opensource.org/licenses/mit-license.php
- * @requires Emmet (currently using revision c973f3d)
+ * @requires Emmet (currently using revision ec2136c)
  * @copyright Emmet 2012 Sergey Chikuyonok <serge.che@gmail.com>
  */
 var zen = (function(emmet){

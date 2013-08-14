@@ -4,7 +4,9 @@ module.exports = function (grunt) {
 	var fs = require('fs'),
 		sPackage = 'package.json',
 		oPackage = grunt.file.readJSON(sPackage),
-		sEmmetPath = 'C:\\xampp\\htdocs\\libs\\js\\emmet\\javascript\\',
+		sEmmetPath = './emmet/javascript/',
+//		sEmmetPath = 'C:\\xampp\\htdocs\\libs\\js\\emmet\\javascript\\',
+//		sEmmetPath = 'C:\\xampp\\htdocs\\libs\\js\\zen\\emmet\\javascript\\',
 
 		sZen = fs.readFileSync('src/zen.js').toString(),
 		sBanner = sZen.match(/\/\*\*([\s\S]*?)\*\//g)[0],
@@ -118,12 +120,32 @@ module.exports = function (grunt) {
 					});
 				}
 			}
+		},
+
+		copy: {
+			external: {
+				files: [
+					{
+						expand: true,
+						flatten: true,
+						src: '../opensource/web/scripts/jquery.opensource.min.js',
+						dest: 'libs/'
+					},
+					{
+						expand: true,
+						cwd: '../opensource/web/style/',
+						src: ['*.!(less|php|*.php)','*/**'],
+						dest: 'style/'
+					}
+				]
+			}
 		}
 	});
 
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-contrib-jshint');
 	grunt.loadNpmTasks('grunt-contrib-concat');
+	grunt.loadNpmTasks('grunt-contrib-copy');
 	grunt.loadNpmTasks('grunt-unused-functions');
 
 	// tasks (jshint)
@@ -147,5 +169,9 @@ module.exports = function (grunt) {
 		,'uglify:zengz'
 		,'uglify:jqueryzen'
 		,'uglify:jqueryzengz'
+	]);
+
+	grunt.registerTask('external',[
+		'copy:external'
 	]);
 };

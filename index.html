@@ -24,38 +24,47 @@
 		<script src="dist/jquery.zen.min.js"></script>
 
 		<script>
-			OPENSOURCE.init({
-				 id: 'Zen'
-				,version: $.ajax({url:'dist/zen.min.js',async:false}).responseText.match(/(\s\*\s@version\s)(\d+\.\d+\.\d+)/).pop()
-				,copyright: 'Copyright (c) 2008-2013 Ron Valstar'
-			},function(){
-				function handleTestClick(){
-					handleResetClick.apply(this);
-					var mP = this.parentNode
-						,sJs = decodeURIComponent(this.attributes['data-js'].value)
-						,aNodeList = eval(sJs)
-					;
-					for (var i=0,l=aNodeList.length;i<l;i++) {
-						mP.appendChild(aNodeList[0]);
+			(function(OS){
+				OS.init({
+					 id: 'Zen'
+					,version: $.ajax({url:'dist/zen.min.js',async:false}).responseText.match(/(\s\*\s@version\s)(\d+\.\d+\.\d+)/).pop()
+					,copyright: 'Copyright (c) 2008-2013 Ron Valstar'
+				},function(){
+					function handleTestClick(){
+						OS.gaTrack('test','click');
+						handleResetClick.apply(this);
+						var mP = this.parentNode
+							,sJs = decodeURIComponent(this.attributes['data-js'].value)
+							,aNodeList = eval(sJs)
+						;
+						for (var i=0,l=aNodeList.length;i<l;i++) {
+							mP.appendChild(aNodeList[i]);
+						}
 					}
-				}
-				function handleResetClick(){
-					var aTest = this.parentNode.querySelectorAll('.test');
-					for (var i=0,l=aTest.length;i<l;i++) {
-						var mElm = aTest[i];
-						mElm.parentNode.removeChild(mElm);
+					function handleResetClick(){
+						var aTest = this.parentNode.querySelectorAll('.test');
+						for (var i=0,l=aTest.length;i<l;i++) {
+							var mElm = aTest[i];
+							mElm.parentNode.removeChild(mElm);
+						}
 					}
-				}
-				$('pre.example').each(function(i,pre){
-					var mP = zen('p>(a.tst[data-js=datajs]{test}+{ or }+a.reset{reset})',{
-							datajs: encodeURIComponent(pre.innerText)
-						})[0]
-					;
-					pre.parentNode.insertBefore(mP,pre.nextSibling);
-					mP.querySelector('.tst').addEventListener('click',handleTestClick,true);
-					mP.querySelector('.reset').addEventListener('click',handleResetClick,true);
+					$('pre.example').each(function(i,pre){
+						var mP = zen('p>(a.tst[data-js=datajs]{test}+{ or }+a.reset{reset})',{
+								datajs: encodeURIComponent(pre.innerText)
+							})[0]
+						;
+						pre.parentNode.insertBefore(mP,pre.nextSibling);
+						mP.querySelector('.tst').addEventListener('click',handleTestClick,true);
+						mP.querySelector('.reset').addEventListener('click',handleResetClick,true);
+					});
+				},{
+					ga: {
+						account: 'UA-670434-4'
+						,domain: 'sjeiti.com'
+						,universal: true
+					}
 				});
-			});
+			})(OPENSOURCE);
 		</script>
 	</head>
 	<body>
@@ -69,7 +78,7 @@
 
 					<p><small>A while back I wrote a few lines for this purpose. This script uses a subset of <a href="https://github.com/emmetio/emmet" target="_blank">Emmet</a> and adds a 'wrapper' function to return an HTMLElement.</small></p>
 
-					<p><small>Excessive use in a production environment is not really recommended. 26kB minified is a bit much and document.createElement is still the proper way. But it's a nice-to-have for prototyping, testing and small projects that don't require speed.</small></p>
+					<p><small>Excessive use in a production environment is not really recommended. 23kB minified is a bit much and document.createElement is still the proper way. But it's a nice-to-have for prototyping, testing and small projects that don't require speed.</small></p>
 
 					<p><small>ps: I named it 'zen' to prevent collisions with emmet, and of course: zen sounds way better.</small></p>
 				</div>
