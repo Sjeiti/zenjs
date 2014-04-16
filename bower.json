@@ -1,0 +1,23 @@
+{
+  "name": "zen",
+  "version": "0.1.7",
+  "main": "dist/zen.js",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "emmet",
+    "libs",
+    "style",
+    "temp",
+    "wrap",
+    "*.md",
+    "Gruntfile.js",
+    "package.json"
+  ],
+  "devDependencies": {
+  },
+  "keywords": [
+    "zen",
+    "emmet"
+  ]
+}
